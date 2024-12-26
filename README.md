@@ -1,0 +1,1 @@
+Quem está em Paris?
