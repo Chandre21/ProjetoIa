@@ -54,7 +54,4 @@ class Entrega :
     def __init__(self, veiculo: Veiculo, node_atual: Cidade) :
         self.veiculo = veiculo
         self.node_atual = node_atual
-
-    def move (cidade_adjacente) :
-        node_atual = cidade_adjacente [0]
-        custo_acumulado += cidade_adjacente [1]
+        self.custo_acumulado = 0
