@@ -101,7 +101,7 @@ class Graph:
     ######################
 
     def getNodes(self):
-        return self.m_nodes
+        return self.m_cidades
     
     ######################################
     #   devolver o custo de uma aresta   #
@@ -132,6 +132,13 @@ class Graph:
                 access = acessibilidade
 
         return access
+
+    ############################################
+    #   menor custo entre 2 nodos adjacentes   #
+    ############################################
+
+    def menor_custo(self, nodo1, nodo2, carga):
+        
 
     ###########################################
     #   dado um caminho calcula o seu custo   #     -> vai precisar da função de custo, só devolve o custo, 
