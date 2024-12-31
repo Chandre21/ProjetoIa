@@ -1,9 +1,9 @@
 class Veiculo :
-    capacidade_carga : int
-    carga_atual : int
-    combustivel : int # Quantos nodes pode andar até proximo reabastecimento
-    autonomia : int # Quantos nodes consegue andar sem reabastecer
-    velocidade : int
+    capacidade_carga : int # Capacidade total para carga do veiculo
+    carga_atual : int # Carga atual
+    combustivel : int # Combustivel disponivel no tanke em litros
+    eficiencia : int # Quantos litros gasta por km (autonomia = combusivel / eficiencia) (combustive_de_salto = eficiencia * distancia)
+    velocidade : int # velocidade em km/algo
     tipo : str # Camião, Helicóptero, Barco, Combóio
 
     def __init__(self, carga_atual: int, combustivel: int, tipo: str):

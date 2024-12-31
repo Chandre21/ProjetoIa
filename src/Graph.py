@@ -3,6 +3,7 @@ import math
 from queue import Queue
 
 from Nodo import Nodo
+from Definicoes import *
 
 
 # Constructor
@@ -137,7 +138,55 @@ class Graph:
     #   menor custo entre 2 nodos adjacentes   #
     ############################################
 
-    def menor_custo(self, nodo1, nodo2, carga):
+    # Custo
+    #
+    # eficiencia_combustivel * 20 %
+    def calcula_eficiencia_combustivel (combustivel_gasto, distancia): 
+        return ((combustivel_gasto / distancia) * 0.2)
+    #           +
+    # eficiencia_carga * 50 %
+    def calcula_eficiencia_carga (carga_usada, carga_veiculo):
+        return ((carga_usada / carga_veiculo) * 0.5)
+    #           +
+    # indice_velocidade * 30 %
+    def calcula_indice_velocidade (velocidade):
+        return (velocidade * 0.3)
+
+    
+
+    def calcula_custo (self, nodo1: Nodo, nodo2: Nodo, entrega: Entrega, veiculo):
+    
+        # Verificar se o destino está conectado à cidade atual
+        conexao_destino = None
+        for conexao in nodo1.conexoes:
+            if conexao.node_final == nodo2:
+                conexao_destino = conexao
+                break
+
+        distancia = conexao_destino.custo_do_salto
+        combustivel_gasto = distancia * veiculo.eficiencia
+        eficiencia_combustivel = self.calcula_eficiencia_combustivel (combustivel_gasto, distancia)
+        eficiencia_carga = self.calcula_eficiencia_carga (entrega.veiculo.carga_atual, entrega.veiculo.capacidade_carga)
+        indice_velocidade = self.calcula_indice (entrega.veiculo.velocidade)
+        
+        
+
+
+
+    def menor_custo(self, nodo1, nodo2, entrega): #! Ler pls
+                                                  # Tipo eu fiz o esqueleto da funcao digamos assim. n tenho tempo agor para procurar como se itera pelos tipos de veiculo
+                                                  # isto assumindo que tipo a eficiencia e stats do genero estao associadas ao tipo de veiculo e nao ao veiculo em si.
+                                                  # Se quiserem fazer com as stats no veiculo em teoria tmb da mas tipo nao faz muito sentido porque tipo quando tiveres
+                                                  # carga maior que o veiculo vai usar dois desse? Mas tipo é possivel basta iterar pelos veiculos neste for em vez de
+                                                  # iterar tipos de veiculo
+        custo = MAX_INT # Btw n sei basta meter 1000000 ig
+        # for veiculo in types of veiculos
+        #     temp_custo = self.calcula_custo (nodo1, nodo2, entrega, veiculo)
+        #     if temp_custo < custo
+        #         custo = temp_custo
+        # return custo
+        undefined
+        
         
 
     ###########################################
