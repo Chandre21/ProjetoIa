@@ -105,7 +105,7 @@ class Graph:
         return self.m_cidades
     
     ######################################
-    #   devolver o custo de uma aresta   #
+    #   devolver o custo de uma aresta   #      -> provavelmente inutil
     ######################################
 
     def get_arc_cost(self, nodo1, nodo2):
@@ -145,52 +145,131 @@ class Graph:
         return ((combustivel_gasto / distancia) * 0.2)
     #           +
     # eficiencia_carga * 50 %
-    def calcula_eficiencia_carga (carga_usada, carga_veiculo):
+    def calcula_eficiencia_carga (carga_usada, carga_veiculo):      #importa muito se temos tipo não tudo usado de um veículo? I mean, desperdíciio sure, mas custo é tipo o mesmo, só n o mais eficiente
         return ((carga_usada / carga_veiculo) * 0.5)
     #           +
     # indice_velocidade * 30 %
     def calcula_indice_velocidade (velocidade):
         return (velocidade * 0.3)
 
-    
+    ###############################
+    #   combustivel por veiculo   #
+    ###############################
+    #counterpart: tipo, temos a eficiencia do veiculo e queremos é saber quanto gasstou, ou seja, podemos fazer algo assim
+    def combustivel_gasto(self, distancia, veiculo):
 
-    def calcula_custo (self, nodo1: Nodo, nodo2: Nodo, entrega: Entrega, veiculo):
-    
-        # Verificar se o destino está conectado à cidade atual
-        conexao_destino = None
-        for conexao in nodo1.conexoes:
-            if conexao.node_final == nodo2:
-                conexao_destino = conexao
-                break
-
-        distancia = conexao_destino.custo_do_salto
-        combustivel_gasto = distancia * veiculo.eficiencia
-        eficiencia_combustivel = self.calcula_eficiencia_combustivel (combustivel_gasto, distancia)
-        eficiencia_carga = self.calcula_eficiencia_carga (entrega.veiculo.carga_atual, entrega.veiculo.capacidade_carga)
-        indice_velocidade = self.calcula_indice (entrega.veiculo.velocidade)
+        match veiculo:
+            case "comboio":
+                ef = 0.75
+            case "heli":
+                ef = 0.4
+            case "barco":
+                ef = 0.8
+            case _:         #camiao
+                ef = 0.5
         
+        gasto = distancia * (1/ef)
+        return gasto                #multiplica a distancia por inverso da eficiencia
+    
+    ##############################
+    #   velocidade por veiculo   #
+    ##############################
+
+    def velocidade_veiculo(self, veiculo):
+
+        match veiculo:
+            case "comboio":
+                v = 140
+            case "heli":
+                v = 200
+            case "barco":
+                v = 40
+            case _:         #camiao
+                v = 90
+
+        return v
+    
+    ##############################
+    #   capacidade por veiculo   #
+    ##############################
+
+    def capacidade_veiculo(self, veiculo):
+
+        match veiculo:
+            case "comboio":
+                c = 800
+            case "heli":
+                c = 150
+            case "barco":
+                c = 1000
+            case _:         #camiao
+                c = 500
+
+        return c
+
+    def menor_custo (self, nodo1, nodo2, carga):      # carga == entrega, tipo só mudei o nome para me orientar
+
+        c1 = self.get_node_by_name(nodo1)
+        c2 = self.get_node_by_name(nodo2)
+        conexoesC1 = self.m_graph[nodo1]
+        menorcusto = float('inf')       #numero maior que todos os outros
+        melhorveic
+
+
+        for (nodo,custo,acessibilidade) in conexoesC1:      # Verificar se o destino está conectado à cidade atual
+            if nodo == c2:
+                for veiculo in acessibilidade:              # itera sobre todos os veiculos naquela conexão
+
+                    cargaCopy = carga
+
+                    gasto = self.combustivel_gasto(custo, veiculo)
+                    gasto = gasto * (1 / self.velocidade_veiculo(veiculo))      #gasto fica o inverso da vel multiplicaado pelo combustivelgasto
+                    cargaCopy -= self.capacidade_veiculo(veiculo)
+
+                    while cargaCopy > 0:                    # verifica se foi tudo, se n foi, então incrementa o custo por si proprio
+
+                        gasto += gasto
+                        cargaCopy -= self.capacidade_veiculo(veiculo)
+
+                    if gasto < menorcusto:                  # agora verifica se muda ou não o método de transporte
+                        menorcusto = gasto
+                        melhorveic = veiculo
+
+                break           #aqui tipo n sei, depois do for de veiculo na acessibilidade ele dá break, é válido?
         
+        return (menorcusto,melhorveic)      #no final, dá o melhor custo bem como o veículo que usou para lá chegaar (não mostra é quantos é que usou)
 
-
-
-    def menor_custo(self, nodo1, nodo2, entrega): #! Ler pls
-                                                  # Tipo eu fiz o esqueleto da funcao digamos assim. n tenho tempo agor para procurar como se itera pelos tipos de veiculo
-                                                  # isto assumindo que tipo a eficiencia e stats do genero estao associadas ao tipo de veiculo e nao ao veiculo em si.
-                                                  # Se quiserem fazer com as stats no veiculo em teoria tmb da mas tipo nao faz muito sentido porque tipo quando tiveres
-                                                  # carga maior que o veiculo vai usar dois desse? Mas tipo é possivel basta iterar pelos veiculos neste for em vez de
-                                                  # iterar tipos de veiculo
-        custo = MAX_INT # Btw n sei basta meter 1000000 ig
-        # for veiculo in types of veiculos
-        #     temp_custo = self.calcula_custo (nodo1, nodo2, entrega, veiculo)
-        #     if temp_custo < custo
-        #         custo = temp_custo
-        # return custo
-        undefined
+        
+#! Ler pls
+# Tipo eu fiz o esqueleto da funcao digamos assim. n tenho tempo agor para procurar como se itera pelos tipos de veiculo
+# isto assumindo que tipo a eficiencia e stats do genero estao associadas ao tipo de veiculo e nao ao veiculo em si.
+# Se quiserem fazer com as stats no veiculo em teoria tmb da mas tipo nao faz muito sentido porque tipo quando tiveres
+# carga maior que o veiculo vai usar dois desse? Mas tipo é possivel basta iterar pelos veiculos neste for em vez de
+# iterar tipos de veiculo
         
         
 
     ###########################################
-    #   dado um caminho calcula o seu custo   #     -> vai precisar da função de custo, só devolve o custo, 
+    #   dado um caminho calcula o seu custo   #
     ###########################################     
 
-    #função de custo, ciclo para passar a carga toda de um nodo para o próximo, influenciada por capacidade, velocidade, autonomia
+    def calcula_custo(self, caminho, carga):
+
+        veiculos = []
+        teste = caminho
+        custoT = 0
+        i = 0
+
+        while i + 1 < len(teste):
+
+            (menor,veic) = self.menor_custo(teste[i], teste[i + 1], carga)
+            custoT += menor                          #acrescenta o menor custo da aresta ao custo total
+            veiculos.append(veic)                   #tou a fazer lista de todos os veiculos usados por transição entre nodos
+            i = i + 1                     #não me deixa fazer i++, outrageous :o
+
+        return (custoT, veiculos)
+    
+    ####################
+    #   procura DFS   #
+    ###################
+        #TODO
