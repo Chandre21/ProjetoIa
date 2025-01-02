@@ -22,6 +22,7 @@ def movimentar_veiculo(entrega: Entrega, destino: Cidade):
         # Verificar autonomia e combustível
         if veiculo.combustivel < conexao_destino.custo_do_salto:
             return f"Erro: Combustível insuficiente para alcançar {destino.nome}."
+        
         if veiculo.autonomia < conexao_destino.custo_do_salto:
             return f"Erro: O veículo {veiculo.tipo} não tem autonomia suficiente para alcançar {destino.nome}."
 

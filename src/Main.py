@@ -1,37 +1,84 @@
 
-from Definicoes import *
-from CriarMapa import *
-from CriarVeiculos import *
-from Movimentacao import *
+from Mapa import *
+from Veiculo import *
+from AlgoritmosProcura import *
+
+def clearScreen () :
+    for a in range (50) :
+        print ("")
+
+def runCenario () :
+
+    running = True
+
+    while running :
+
+        # Dispor algoritmos
+        print ("Escolha um algoritmo:")
+        print ("1 - Minimax")
+        print ("2 - Custo Uniforme")
+        print ("3 - BFS")
+        print ("4 - DFS")
+        print ("9 - Voltar atras")
+
+        # Ler numero obtido
+        choice = int(input(":"))
+
+        if choice == 1 :
+            # run minimax
+            pass
+
+        elif choice == 2 :
+            # run Custo Uniforme
+            pass
+
+        elif choice == 3 :
+            # BFS
+            pass
+
+        elif choice == 3 :
+            # DFS
+            pass
+
+        elif choice == 9 :
+            running = False
+
 
 def main () :
 
-    mapa = criarMapa ()
+    mapa = Mapa ()
 
-    veiculos = criar_veiculos()
+    popularMapa (mapa)
 
-    cidade_inicial = mapa.cidades[0]
-    veiculo = veiculos[0]
+    running = True
 
-    entrega = Entrega(veiculo,cidade_inicial)
+    # GUIzinha marota
+    while running :
+        clearScreen ()
 
-    print(f"Início da entrega em {cidade_inicial.nome} com o veículo {veiculo.tipo}.")
+        # Dispor operacoes
+        print ("Escolha uma operacao:")
+        print ("1 - Executar cenario")
+        print ("2 - Mudar prioridade de cidades")
+        print ("3 - Encerrar conexoes entre cidades")
+        print ("9 - Sair")
 
-    cidade_final1 = mapa.cidades[1]
+        # Ler numero obtido
+        choice = int(input(":"))
 
-    resultado = movimentar_veiculo(entrega, cidade_final1)
-    print(resultado)
+        if choice == 1 :
+            runCenario ()
 
-    print(f"Cidade atual: {entrega.node_atual.nome}")
-    print(f"Custo acumulado: {entrega.custo_acumulado}")
+        elif choice == 2 :
+            pass
 
-    cidade_final2 = mapa.cidades[9]
+        elif choice == 3 :
+            pass
 
-    resultado = movimentar_veiculo(entrega, cidade_final2)
-    print(resultado)
+        elif choice == 9 :
+            running = False
 
-    print(f"Cidade atual: {entrega.node_atual.nome}")
-    print(f"Custo acumulado: {entrega.custo_acumulado}")    
+
 
 if __name__ == "__main__":
     main ()

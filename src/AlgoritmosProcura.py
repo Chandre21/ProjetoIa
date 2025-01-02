@@ -1,70 +1,118 @@
-from Definicoes import *
-import heapq
+# BFS
+# DFS
+# A*
 
-def Minimax ():
-    pass
+from queue import Queue
+
+from Mapa import *
+from Veiculo import *
 
 
-class UniformCostSearch:
-    def __init__(self, mapa: Mapa):
-        self.mapa = mapa
 
-    def buscar(self, cidade_inicial: Cidade, cidade_destino: Cidade, veiculo: Veiculo):
-        # Fila de prioridade para gerenciar os nós a serem explorados
-        fronteira = []
-        # Estado inicial
-        estado_inicial = (0, cidade_inicial, veiculo, 0)  # (custo_acumulado, cidade_atual, veiculo, carga_entregue)
-        heapq.heappush(fronteira, estado_inicial)
-        # Conjunto de cidades visitadas
-        visitados = set()
+##################################
+#     Obter custo de caminho     #
+##################################
 
-        while fronteira:
-            custo_atual, cidade_atual, veiculo_atual, carga_entregue = heapq.heappop(fronteira)
+def menor_custo (mapa : Mapa, nodo1, nodo2, carga_atual) :
 
-            # Checar se já atingimos a cidade destino com as necessidades atendidas
-            if cidade_atual == cidade_destino and cidade_destino.mantimentos_atuais >= cidade_destino.necessidade:
-                print(f"Objetivo alcançado com custo {custo_atual}")
-                return custo_atual
+    c1 = mapa.get_node_by_name(nodo1)
+    c2 = mapa.get_node_by_name(nodo2)
 
-            # Se o nó já foi visitado, ignorá-lo
-            if (cidade_atual, veiculo_atual.carga_atual, veiculo_atual.combustivel) in visitados:
-                continue
+    conexoesC1 = mapa.m_graph [c1]
+    menorcusto = float ('inf') # Numero maior que todos os outros
+    melhorveiculo = None
 
-            # Marcar como visitado
-            visitados.add((cidade_atual, veiculo_atual.carga_atual, veiculo_atual.combustivel))
+    for (nodo,distancia,acessibilidade) in conexoesC1: # Verificar se o destino está conectado à cidade atual
+        if nodo == c2:
 
-            # Explorar conexões
-            for conexao in cidade_atual.conexoes:
-                proxima_cidade = conexao.node_final
-                custo_salto = conexao.custo_do_salto
+            if c2 in mapa.lista_preferencias :
+                custo = - ((mapa.lista_preferencias.__len__ - mapa.lista_preferencias.index (c2)) * 10)
+            else :
+                custo = 0
 
-                # Verificar se o veículo pode acessar a próxima cidade
-                if veiculo_atual.tipo not in conexao.acessibilidade:
-                    continue    #passa à próxima interação
+            for tipo in acessibilidade: # Itera sobre todos os veiculos naquela conexão
 
-                # Verificar se o veículo tem combustível suficiente
-                if veiculo_atual.combustivel < custo_salto:
-                    continue
+                veiculo = Veiculo (tipo)
+                cargaCopy = carga_atual
 
-                # Atualizar os mantimentos entregues
-                mantimentos_a_entregar = min(
-                    veiculo_atual.carga_atual,
-                    proxima_cidade.necessidade - proxima_cidade.mantimentos_atuais
-                )
-                proxima_cidade.mantimentos_atuais += mantimentos_a_entregar
-                veiculo_atual.carga_atual -= mantimentos_a_entregar
+                veiculos_necessarios = math.ceil (cargaCopy / veiculo.getCapacidade())
+                combustivel_gasto = veiculo.calcula_combustivel_consumido (distancia) * veiculos_necessarios
 
-                # Atualizar combustível
-                veiculo_atual.combustivel -= custo_salto
+                custo += 0.5 * combustivel_gasto + 0.5 * veiculo.getVelocidade ()
+                # 50% combustivel
+                # 50% velocidade
 
-                # Adicionar o próximo estado na fila de prioridade
-                novo_estado = (
-                    custo_atual + custo_salto,
-                    proxima_cidade,
-                    veiculo_atual,
-                    carga_entregue + mantimentos_a_entregar
-                )
-                heapq.heappush(fronteira, novo_estado)
+                if custo < menorcusto: # Agora verifica se muda ou não o método de transporte
+                    menorcusto = custo
+                    melhorveiculo = veiculo
 
-        print("Não foi possível alcançar o objetivo.")
-        return float('inf')
+    return (menorcusto, melhorveiculo)
+
+def calcula_custo(caminho, carga):
+
+        caminho_veiculos = []
+        caminho
+        custo = 0
+        i = 0
+
+        while i + 1 < len (caminho) :
+
+            nodoa = caminho[i]
+            nodob = caminho[i + 1]
+
+            (temp_custo, veiculo) = menor_custo(nodoa, nodob, carga)
+
+            custo += temp_custo # Acrescenta o menor custo da aresta ao custo total
+            caminho_veiculos.append((nodoa, nodob, veiculo)) # Lista com os nodos da aresta e o respetivo veiculo otimo
+            i = i + 1 # Não me deixa fazer i++, outrageous :o
+
+        return (caminho_veiculos, custo)
+
+
+
+########################
+#      Algoritmos      #
+########################
+
+def procuraBFS (mapa: Mapa, nodo_inicial, nodo_final, carga) :
+    # definir nodos visitados para evitar ciclos
+    visited = set ()
+    fila = Queue ()
+    custo = 0
+
+    # adicionar o nodo inicial à fila e aos visitados
+    fila.put(nodo_inicial)
+    visited.add(nodo_inicial)
+
+    parent = dict ()
+    parent [nodo_inicial] = None
+
+    encontrado = False
+    while not fila.empty () and encontrado == False :
+        nodo_atual = fila.get ()
+
+        if nodo_atual == nodo_final :
+            encontrado = True # Encontrou caminho
+
+        else:
+            for (adjacente, peso) in mapa.m_graph[nodo_atual] : # Procura adjacentes
+                if adjacente not in visited : # Apenas nao visitados
+
+                    fila.put (adjacente) # Mete para procurar
+                    parent [adjacente] = nodo_atual
+                    visited.add (adjacente) # Marca como visitado
+
+    caminho = []
+
+    if encontrado :
+        caminho.append(nodo_final)
+
+        while parent [nodo_final] is not None:
+            caminho.append (parent[nodo_final])
+            nodo_final = parent[nodo_final]
+
+        caminho.reverse ()
+
+        (caminho_veiculos, custo) = mapa.calcula_custo (caminho, carga)
+
+    return (caminho_veiculos, custo)
