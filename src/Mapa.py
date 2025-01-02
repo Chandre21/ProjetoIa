@@ -3,7 +3,6 @@ import math
 from queue import Queue
 
 from Nodo import Nodo
-from Definicoes import *
 
 class Mapa:
     def __init__(self):         #nodo [(nodo_final,custo,acessibljijaci, ativo?)]
@@ -21,7 +20,7 @@ class Mapa:
         out = ""
 
         for key in self.m_graph.keys():
-            out = out + "cidade" + str(key) + ": " + str(self.m_graph[key]) + "\n"
+            out = out + "cidade" + str(key) + ": " + str(self.m_graph[key].cidade) + "\n"
         return out
 
     ################################
@@ -49,7 +48,7 @@ class Mapa:
 
         for nodo in lista:
             for (nodo2, custo, acessibilidade) in self.m_graph[nodo]:       #acessibilidade vai ser a lista dos tipos de veiculos
-                listaA = listaA + nodo + " -> " + nodo2 + ", custo: " + str(custo) + ", acessibilidade: " + str(acessibilidade) + "\n"
+                listaA = listaA + nodo.cidade + " -> " + nodo2.cidade + ", custo: " + str(custo) + ", acessibilidade: " + str(acessibilidade) + "\n"
         return listaA
 
     #################################
@@ -62,27 +61,23 @@ class Mapa:
         c2 = Nodo(nodo2)
 
         if (c1 not in self.m_cidades):
-            c1_id = len(self.m_nodes)  # numeração sequencial
+            c1_id = len(self.m_cidades)  # numeração sequencial
             c1.setId(c1_id)
-            c1.setNecessidade = 0;      #necessidade e mantimentos atuais a 0,0
-            c1.setMAtuais = 0;
             self.m_cidades.append(c1)
-            self.m_graph[nodo1] = []
+            self.m_graph[c1] = []
         else:
             c1 = self.get_node_by_name(nodo1)
 
         if (c2 not in self.m_cidades):
-            c2_id = len(self.m_nodes)  # numeração sequencial
+            c2_id = len(self.m_cidades)  # numeração sequencial
             c2.setId(c2_id)
-            c2.setNecessidade = 0;      #necessidade e mantimentos atuais a 0,0
-            c2.setMAtuais = 0;
             self.m_cidades.append(c2)
-            self.m_graph[nodo2] = []
+            self.m_graph[c2] = []
         else:
-            n2 = self.get_node_by_name(nodo2)
+            c2 = self.get_node_by_name(nodo2)
 
-        self.m_graph[nodo1].append((nodo2, peso, acessibilidade))       #só passar a acessibilidade como lista and we gucci
-        self.m_graph[nodo2].append((nodo1, peso, acessibilidade))       #também vou assumir que posso fazer tuplo de 3 elementos
+        self.m_graph[c1].append((c2, peso, acessibilidade))       #só passar a acessibilidade como lista and we gucci
+        self.m_graph[c2].append((c1, peso, acessibilidade))       #também vou assumir que posso fazer tuplo de 3 elementos
             #é tudo bidirecional
 
     ######################
@@ -91,6 +86,10 @@ class Mapa:
 
     def getNodes(self):
         return self.m_cidades
+
+    def set_necessidade_cidade (self, nome_cidade, necessidade):
+        nodo = self.get_node_by_name (nome_cidade)
+        nodo.setNecessidade (necessidade)
 
 
 
@@ -126,3 +125,17 @@ def popularMapa (mapa : Mapa) :
     mapa.add_edge ("Crescent Park", "Bluebell National Park", 15, ["camiao", "heli", "comboio"]) # 7 -> 11
 
     mapa.add_edge ("Bluebell National Park", "Fort Meadows", 15, ["camiao", "heli", "comboio"]) # 11 -> 10
+
+    # mapa.set_necessidade_cidade ("Cherry Tree Hills", 100)
+    # mapa.set_necessidade_cidade ("Albatross Island", 100)
+    # mapa.set_necessidade_cidade ("Downtown", valor)
+    # mapa.set_necessidade_cidade ("Bright Lights Plaza", valor)
+    # mapa.set_necessidade_cidade ("Paradise Sands", valor)
+    # mapa.set_necessidade_cidade ("Crescent Park", valor)
+    # mapa.set_necessidade_cidade ("Bluebell National Park", valor)
+    # mapa.set_necessidade_cidade ("Lady Liberty Island", valor)
+    mapa.set_necessidade_cidade ("Lego City Airport", 100)
+    # mapa.set_necessidade_cidade ("Festival Square", valor)
+    # mapa.set_necessidade_cidade ("Fort Meadows", valor)
+    # mapa.set_necessidade_cidade ("Kings Court", valor)
+    # mapa.set_necessidade_cidade ("Auburn", valor)

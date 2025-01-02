@@ -1,10 +1,10 @@
 class Nodo:         #cidades bro
-    def __init__(self, cidade, id, necessidade, mantimentos_atuais):
-        self.id = id
+    def __init__(self, cidade):
+        self.id = 0
         self.cidade = cidade
-        self.necessidade = necessidade
-        self.mantimentos_atuais = mantimentos_atuais
-    
+        self.necessidade = 0
+        self.mantimentos_atuais = 0
+
     def __str__(self):
         return "Cidade " + self.cidade
 
@@ -19,7 +19,7 @@ class Nodo:         #cidades bro
 
     def getName(self):
         return self.cidade
-    
+
     def setNecessidade(self, necessidade):
         self.necessidade = necessidade
 

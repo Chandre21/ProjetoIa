@@ -7,7 +7,7 @@ def clearScreen () :
     for a in range (50) :
         print ("")
 
-def runCenario () :
+def runCenario (mapa) :
 
     running = True
 
@@ -22,7 +22,7 @@ def runCenario () :
         print ("9 - Voltar atras")
 
         # Ler numero obtido
-        choice = int(input(":"))
+        choice = int(input(": "))
 
         if choice == 1 :
             # run minimax
@@ -34,7 +34,11 @@ def runCenario () :
 
         elif choice == 3 :
             # BFS
-            pass
+            (caminho_veiculos, custo) = procuraBFS (mapa, "Cherry Tree Hills", "Lego City Airport", 1500)
+            print (f"custo: {custo}")
+            print ("caminho percorrido:")
+            for (nodoa, nodob, veiculo) in caminho_veiculos :
+                print (f"{nodoa.cidade} -----> {nodob.cidade} = Veiculo escolhido: {veiculo.tipo}")
 
         elif choice == 3 :
             # DFS
@@ -64,10 +68,11 @@ def main () :
         print ("9 - Sair")
 
         # Ler numero obtido
-        choice = int(input(":"))
+        choice = int(input(": "))
 
         if choice == 1 :
-            runCenario ()
+            carga = int (input ("insira a carga inicial: "))
+            runCenario (mapa)
 
         elif choice == 2 :
             pass
