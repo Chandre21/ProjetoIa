@@ -13,7 +13,10 @@ def runCenario (mapa:Mapa, carga) :
 
     while running :
 
-        popular_lista_preferencias (mapa)
+        mapa.popular_lista_preferencias()       # manter ativa se utilizarmos lista já baked in, desativa se não
+
+        if carga <= 0:
+                carga = sum(nodo.necessidade for nodo in mapa.lista_preferencias)       #carga automática
 
         clearScreen ()
 
@@ -28,11 +31,9 @@ def runCenario (mapa:Mapa, carga) :
         choice = int(input(": "))
         clearScreen ()
 
-        nodo_inicial_str = "Bright Lights Plaza"
-        nodo_final_str = "Lego City Airport"
+        nodo_inicial_str = "Cherry Tree Hills"
 
         nodo_inicial = mapa.get_node_by_name (nodo_inicial_str)
-        nodo_final = mapa.get_node_by_name (nodo_final_str)
 
         if choice == 1 :
             #A*
@@ -64,7 +65,7 @@ def main () :
 
     mapa = Mapa ()
 
-    popularMapa (mapa)
+    mapa.popularMapa()
 
     running = True
 
@@ -75,8 +76,9 @@ def main () :
         # Dispor operacoes
         print ("Escolha uma operacao:")
         print ("1 - Executar cenario")
-        print ("2 - Mudar prioridade de cidades")
-        print ("3 - Encerrar conexoes entre cidades")
+        print ("2 - Definir necessidade de cidades")
+        print ("3 - Simular eventos metereológicos")
+        print ("4 - Reativar conexões")
         print ("9 - Sair")
 
         # Ler numero obtido
@@ -84,12 +86,28 @@ def main () :
 
         if choice == 1 :
             clearScreen ()
-            carga = int (input ("Insira a carga inicial: "))
+            carga = int (input ("Insira a carga inicial (0 se quiser cálculo automático): "))
+
             runCenario (mapa, carga)
 
         elif choice == 2 :
             clearScreen ()
-            pass
+
+            cidade = str(input("Indique o nome da cidade: "))
+            nec = int(input("Indique a necessidade da cidade: "))
+
+            nodo = mapa.get_node_by_name(cidade)
+
+            if nodo is None:                    # verifica se o nodo existe no sistema
+                print("A cidade não existe. :o")
+                continue
+            else:
+                print("A necessidade da cidade " + cidade + f" foi corretamente atualizada para {nec}.")
+
+            nodo.setNecessidade(nec)
+            
+            mapa.lista_preferencias.append(nodo)
+            mapa.lista_preferencias.sort(key=lambda nodo: nodo.necessidade, reverse = True)        #ordenar a lista por ordem decrescente
 
         elif choice == 3 :
             clearScreen ()

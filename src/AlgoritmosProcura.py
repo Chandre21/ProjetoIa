@@ -30,7 +30,7 @@ def menor_custo (mapa : Mapa, nodo1, nodo2, carga_atual) :
     menorcusto = float ('inf') # Numero maior que todos os outros
     melhorveiculo = None
 
-    for (nodo,distancia,acessibilidade) in mapa.m_graph [nodo1]: # Verificar se o destino está conectado à cidade atual
+    for (nodo,distancia,acessibilidade, _) in mapa.m_graph [nodo1]: # Verificar se o destino está conectado à cidade atual
         if nodo == nodo2:
 
             for tipo in acessibilidade: # Itera sobre todos os veiculos naquela conexão
@@ -108,10 +108,18 @@ def iterator (mapa: Mapa, nodo_inicial_input, carga, algoritmo) :
         caminho_veiculos_total = caminho_veiculos_total + caminho_veiculos
         custo_total += custo
 
-        for (nodoa, nodob, veiculo) in caminho_veiculos :
+        for (_, nodob, _) in caminho_veiculos :
             if nodob in mapa.lista_preferencias :
+                if nodob.necessidade > carga :
+                    nodob.mantimentos_atuais = carga
+                    nodob.necessidade -= carga
+                    carga = 0
+                    print("Ficou sem carga em: " + nodob.cidade)
+                    return (caminho_veiculos_total, custo_total)
+                
                 carga -= nodob.necessidade
                 nodob.mantimentos_atuais = nodob.necessidade
+                mapa.set_necessidade_cidade(nodob.cidade, 0)        #reset à necessidade para 0
                 mapa.lista_preferencias.remove (nodob)
 
                 print ("")
@@ -147,8 +155,8 @@ def procuraBFS (mapa: Mapa, nodo_inicial, nodo_final, carga) :
             encontrado = True # Encontrou caminho
 
         else:
-            for (adjacente, _, _) in mapa.m_graph[nodo_atual] : # Procura adjacentes
-                if adjacente not in visited : # Apenas nao visitados
+            for (adjacente, _, _, ativo) in mapa.m_graph[nodo_atual] : # Procura adjacentes
+                if adjacente not in visited and ativo == True : # Apenas nao visitados e !ativos!
 
                     fila.put (adjacente) # Mete para procurar
                     parent [adjacente] = nodo_atual
@@ -181,9 +189,9 @@ def procura_DFS(mapa, nodo_inicial, nodo_final, carga, caminho=[], visited=set()
         (caminho_veiculos, custo) = calcula_custo (mapa, caminho, carga)
         return (caminho_veiculos, custo)
 
-    for (adjacente, _, _) in mapa.m_graph[nodo_inicial] :# Recursivo para cada branch que parte deste nodo
+    for (adjacente, _, _, ativo) in mapa.m_graph[nodo_inicial] :# Recursivo para cada branch que parte deste nodo
 
-        if adjacente not in visited:
+        if adjacente not in visited and ativo == True:      # verifica se é ativo também
 
             resultado = procura_DFS (mapa, adjacente, nodo_final, carga, caminho, visited)
 
@@ -220,6 +228,8 @@ def procura_AEstrela(mapa, start, end, carga):
             if n is None or g[v] + mapa.getH(v) < g[n] + mapa.getH(n):
                 n = v
 
+        mapa.setAllH(n)  # Atualiza as heurísticas
+
         if n is None:
             print('Path does not exist!')
             return None
@@ -233,23 +243,28 @@ def procura_AEstrela(mapa, start, end, carga):
 
             reconst_path.append(start)
             reconst_path.reverse()
-
+            print(reconst_path)
             caminho_veiculos, custo = calcula_custo(mapa, reconst_path, carga)
             return (caminho_veiculos, custo)
 
-        for (m, weight, acessibilidade) in mapa.m_graph[n]:
-            if m not in open_list and m not in closed_list:
-                open_list.add(m)
-                parents[m] = n
-                g[m] = g[n] + weight
-            else:
-                if g[m] > g[n] + weight:
-                    g[m] = g[n] + weight
+        for (m, weight, acessibilidade, ativo) in mapa.m_graph[n]:
+            if ativo:  # Verifica se a aresta está ativa
+                temp_custo, _ = menor_custo(mapa, n, m, carga)
+                print(f"{temp_custo}")
+                print(f" heuristica {mapa.getH(n)}")
+                print(f"{g[n]}")
+                if m not in open_list and m not in closed_list:
+                    open_list.add(m)
                     parents[m] = n
+                    g[m] = g[n] + temp_custo
+                else:
+                    if g[m] > g[n] + temp_custo:
+                        g[m] = g[n] + temp_custo
+                        parents[m] = n
 
-                    if m in closed_list:
-                        closed_list.remove(m)
-                        open_list.add(m)
+                        if m in closed_list:
+                            closed_list.remove(m)
+                            open_list.add(m)
 
         open_list.remove(n)
         closed_list.add(n)
