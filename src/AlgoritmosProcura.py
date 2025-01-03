@@ -79,31 +79,24 @@ def calcula_custo(mapa, caminho, carga):
 #      Algoritmos      #
 ########################
 
-def procuraBFS (mapa: Mapa, nodo_inicial_str, nodo_final_str, carga) :
+def procuraBFS (mapa: Mapa, nodo_inicial, nodo_final, carga) :
+
     # definir nodos visitados para evitar ciclos
     visited = set ()
     fila = Queue ()
     custo = 0
 
-    nodo_inicial = mapa.get_node_by_name (nodo_inicial_str)
-    nodo_final = mapa.get_node_by_name (nodo_final_str)
-
     # adicionar o nodo inicial à fila e aos visitados
     fila.put(nodo_inicial)
     visited.add(nodo_inicial)
 
+    # Dicionario para obter pais através dos nodos filho
     parent = dict ()
     parent [nodo_inicial] = None
 
     encontrado = False
     while not fila.empty () and encontrado == False :
         nodo_atual = fila.get ()
-
-        # se tiver na lista de prioridade das cidades
-        if nodo_atual in mapa.lista_preferencias :
-            carga -= nodo_atual.necessidade
-            nodo_atual.mantimentos_atuais = nodo_atual.necessidade
-            mapa.lista_preferencias.remove (nodo_atual)
 
         if nodo_atual == nodo_final :
             encontrado = True # Encontrou caminho
@@ -130,3 +123,36 @@ def procuraBFS (mapa: Mapa, nodo_inicial_str, nodo_final_str, carga) :
         (caminho_veiculos, custo) = calcula_custo (mapa, caminho, carga)
 
     return (caminho_veiculos, custo)
+
+
+def procura_DFS(mapa, nodo_inicial, nodo_final, carga, caminho=[], visited=set()): # Por omissao caminho = [] e visited = set()
+
+
+    caminho.append (nodo_inicial)
+    visited.add (nodo_inicial)
+
+    if nodo_inicial == nodo_final : # Encontrou caminho
+
+        (caminho_veiculos, custo) = calcula_custo (mapa, caminho, carga)
+        return (caminho_veiculos, custo)
+
+    for (adjacente, _, _) in mapa.m_graph[nodo_inicial] :# Recursivo para cada branch que parte deste nodo
+
+        if adjacente not in visited:
+
+            resultado = procura_DFS (mapa, adjacente, nodo_final, carga, caminho, visited)
+
+            if resultado is not None:
+                return resultado
+
+    caminho.pop () # se nao encontra remove o ultimo node procurado do caminho para passar a outra branch
+    return None
+
+
+    # Se tiver na lista de prioridade das cidades
+
+    # if nodo_atual in mapa.lista_preferencias :
+    #     carga -= nodo_atual.necessidade
+    #     nodo_atual.mantimentos_atuais = nodo_atual.necessidade
+    #     mapa.lista_preferencias.remove (nodo_atual)
+

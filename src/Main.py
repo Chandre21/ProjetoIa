@@ -7,7 +7,7 @@ def clearScreen () :
     for a in range (50) :
         print ("")
 
-def runCenario (mapa) :
+def runCenario (mapa:Mapa, carga) :
 
     running = True
 
@@ -15,36 +15,47 @@ def runCenario (mapa) :
 
         # Dispor algoritmos
         print ("Escolha um algoritmo:")
-        print ("1 - Minimax")
-        print ("2 - Custo Uniforme")
-        print ("3 - BFS")
-        print ("4 - DFS")
+        print ("1 - A*")
+        print ("2 - BFS")
+        print ("3 - DFS")
         print ("9 - Voltar atras")
 
         # Ler numero obtido
         choice = int(input(": "))
 
+        nodo_inicial_str = "Cherry Tree Hills"
+        nodo_final_str = "Lego City Airport"
+
+        nodo_inicial = mapa.get_node_by_name (nodo_inicial_str)
+        nodo_final = mapa.get_node_by_name (nodo_final_str)
+
         if choice == 1 :
-            # run minimax
+            clearScreen ()
+            # run A*
             pass
 
         elif choice == 2 :
-            # run Custo Uniforme
-            pass
-
-        elif choice == 3 :
+            clearScreen ()
             # BFS
-            (caminho_veiculos, custo) = procuraBFS (mapa, "Cherry Tree Hills", "Lego City Airport", 1500)
+            (caminho_veiculos, custo) = procuraBFS (mapa, nodo_inicial, nodo_final, carga)
+
             print (f"custo: {custo}")
             print ("caminho percorrido:")
             for (nodoa, nodob, veiculo) in caminho_veiculos :
                 print (f"{nodoa.cidade} -----> {nodob.cidade} = Veiculo escolhido: {veiculo.tipo}")
 
         elif choice == 3 :
+            clearScreen ()
             # DFS
-            pass
+            (caminho_veiculos, custo) = procura_DFS(mapa, nodo_inicial, nodo_final, carga, caminho=[], visited=set())
+
+            print (f"custo: {custo}")
+            print ("caminho percorrido:")
+            for (nodoa, nodob, veiculo) in caminho_veiculos :
+                print (f"{nodoa.cidade} -----> {nodob.cidade} = Veiculo escolhido: {veiculo.tipo}")
 
         elif choice == 9 :
+            clearScreen ()
             running = False
 
 
@@ -71,16 +82,20 @@ def main () :
         choice = int(input(": "))
 
         if choice == 1 :
-            carga = int (input ("insira a carga inicial: "))
-            runCenario (mapa)
+            clearScreen ()
+            carga = int (input ("Insira a carga inicial: "))
+            runCenario (mapa, carga)
 
         elif choice == 2 :
+            clearScreen ()
             pass
 
         elif choice == 3 :
+            clearScreen ()
             pass
 
         elif choice == 9 :
+            clearScreen ()
             running = False
 
 
