@@ -13,6 +13,10 @@ def runCenario (mapa:Mapa, carga) :
 
     while running :
 
+        popular_lista_preferencias (mapa)
+
+        clearScreen ()
+
         # Dispor algoritmos
         print ("Escolha um algoritmo:")
         print ("1 - A*")
@@ -22,6 +26,7 @@ def runCenario (mapa:Mapa, carga) :
 
         # Ler numero obtido
         choice = int(input(": "))
+        clearScreen ()
 
         nodo_inicial_str = "Bright Lights Plaza"
         nodo_final_str = "Lego City Airport"
@@ -29,43 +34,30 @@ def runCenario (mapa:Mapa, carga) :
         nodo_inicial = mapa.get_node_by_name (nodo_inicial_str)
         nodo_final = mapa.get_node_by_name (nodo_final_str)
 
-        if nodo_inicial is None or nodo_final is None: 
-            print(f"Erro: Os nodos '{nodo_inicial_str}' ou '{nodo_final_str}' não foram encontrados no mapa.") 
-            return
-
         if choice == 1 :
-            clearScreen ()
             #A*
-            (caminho_veiculos, custo) = procura_AEstrela(mapa, nodo_inicial, nodo_final, carga)
+            (caminho_veiculos, custo) = iterator (mapa, nodo_inicial, carga, "A*")
 
-            print (f"custo: {custo}")
-            print ("caminho percorrido:")
-            for (nodoa, nodob, veiculo) in caminho_veiculos :
-                print (f"{nodoa.cidade} -----> {nodob.cidade} = Veiculo escolhido: {veiculo.tipo}")
 
         elif choice == 2 :
-            clearScreen ()
             # BFS
-            (caminho_veiculos, custo) = procuraBFS (mapa, nodo_inicial, carga)
+            (caminho_veiculos, custo) = iterator (mapa, nodo_inicial, carga, "BFS")
 
-            print (f"custo: {custo}")
-            print ("caminho percorrido:")
-            for (nodoa, nodob, veiculo) in caminho_veiculos :
-                print (f"{nodoa.cidade} -----> {nodob.cidade} = Veiculo escolhido: {veiculo.tipo}")
 
         elif choice == 3 :
-            clearScreen ()
             # DFS
-            (caminho_veiculos, custo) = procura_DFS(mapa, nodo_inicial, nodo_final, carga, caminho=[], visited=set())
-
-            print (f"custo: {custo}")
-            print ("caminho percorrido:")
-            for (nodoa, nodob, veiculo) in caminho_veiculos :
-                print (f"{nodoa.cidade} -----> {nodob.cidade} = Veiculo escolhido: {veiculo.tipo}")
+            (caminho_veiculos, custo) = iterator (mapa, nodo_inicial, carga, "DFS")
 
         elif choice == 9 :
-            clearScreen ()
             running = False
+            continue
+
+        print (f"custo: {custo}")
+        print ("caminho percorrido:")
+        for (nodoa, nodob, veiculo) in caminho_veiculos :
+            print (f"{nodoa.cidade} -----> {nodob.cidade} = Veiculo escolhido: {veiculo.tipo}")
+
+        input ()
 
 
 def main () :
@@ -73,8 +65,6 @@ def main () :
     mapa = Mapa ()
 
     popularMapa (mapa)
-
-    popular_lista_preferencias (mapa)
 
     running = True
 

@@ -158,7 +158,7 @@ def popular_lista_preferencias (mapa : Mapa) :
     mapa.lista_preferencias = []
     for node in mapa.m_cidades :
 
-        # set heuristica
+        # heuristica make pls
 
         if node.necessidade == 0 :
             continue
@@ -166,6 +166,7 @@ def popular_lista_preferencias (mapa : Mapa) :
         i = 0
         while i < len (mapa.lista_preferencias) and node.necessidade < mapa.lista_preferencias [i].necessidade :
             i = i + 1
+
         mapa.lista_preferencias.insert(i, node)
 
     # print ("[")

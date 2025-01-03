@@ -16,11 +16,10 @@ from Nodo import *
 
 def menor_custo (mapa : Mapa, nodo1, nodo2, carga_atual) :
 
-    conexoesC1 = mapa.m_graph [nodo1]
     menorcusto = float ('inf') # Numero maior que todos os outros
     melhorveiculo = None
 
-    for (nodo,distancia,acessibilidade) in conexoesC1: # Verificar se o destino está conectado à cidade atual
+    for (nodo,distancia,acessibilidade) in mapa.m_graph [nodo1]: # Verificar se o destino está conectado à cidade atual
         if nodo == nodo2:
 
             if nodo2 in mapa.lista_preferencias :
@@ -50,6 +49,7 @@ def menor_custo (mapa : Mapa, nodo1, nodo2, carga_atual) :
                     melhorveiculo = veiculo
 
     print (f"escolhi o {melhorveiculo.tipo}")
+    print ("")
 
     return (menorcusto, melhorveiculo)
 
@@ -78,7 +78,7 @@ def calcula_custo(mapa, caminho, carga):
 #      Algoritmos      #
 ########################
 
-def procuraBFS (mapa: Mapa, nodo_inicial_input, carga) :
+def iterator (mapa: Mapa, nodo_inicial_input, carga, algoritmo) :
 
     caminho_veiculos_total = []
     custo_total = 0
@@ -86,7 +86,19 @@ def procuraBFS (mapa: Mapa, nodo_inicial_input, carga) :
     nodo_inicial = nodo_inicial_input
 
     while mapa.lista_preferencias != [] :
-        (caminho_veiculos, custo) = procuraBFS_iter (mapa, nodo_inicial, mapa.lista_preferencias [0], carga)
+        print (f"{nodo_inicial.cidade} -> {mapa.lista_preferencias [0].cidade}")
+        match algoritmo:
+
+
+            case "BFS" :
+                (caminho_veiculos, custo) = procuraBFS (mapa, nodo_inicial, mapa.lista_preferencias [0], carga)
+
+            case "DFS" :
+                (caminho_veiculos, custo) = procura_DFS (mapa, nodo_inicial, mapa.lista_preferencias [0], carga, caminho = [], visited = set())
+
+            case "A*" :
+                (caminho_veiculos, custo) = procura_AEstrela (mapa, nodo_inicial, mapa.lista_preferencias [0], carga)
+
         caminho_veiculos_total = caminho_veiculos_total + caminho_veiculos
         custo_total += custo
 
@@ -95,6 +107,7 @@ def procuraBFS (mapa: Mapa, nodo_inicial_input, carga) :
                 carga -= nodob.necessidade
                 nodob.mantimentos_atuais = nodob.necessidade
                 mapa.lista_preferencias.remove (nodob)
+
                 print ("")
                 print (f"descarregou no nodo {nodob.cidade}")
                 print ("")
@@ -105,7 +118,7 @@ def procuraBFS (mapa: Mapa, nodo_inicial_input, carga) :
 
 
 
-def procuraBFS_iter (mapa: Mapa, nodo_inicial, nodo_final, carga) :
+def procuraBFS (mapa: Mapa, nodo_inicial, nodo_final, carga) :
 
     # definir nodos visitados para evitar ciclos
     visited = set ()
