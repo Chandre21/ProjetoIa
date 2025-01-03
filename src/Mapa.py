@@ -106,13 +106,13 @@ class Mapa:
         
     def setAllH(self, nodob):       #define a heuristica de acordo com o nodo em que está
 
-        for nodoi in self.heuristicas:
-            print("ahhhhh" + nodoi)
+        for nodoi in self.m_cidades:
+            
             if nodoi != nodob:
 
                 diferenca = abs(nodob.getId() - nodoi.getId())      #calcula a diferença dos ints
 
-                self.heuristicas[nodoi] = 0 #random.randint(diferenca*3, diferenca*3 + 5)     #random com base na diferença
+                self.heuristicas[nodoi] = diferenca     #IT WORKSSSSSSSSSSSS
             else:
                 self.heuristicas[nodob] = 0         #heuristica 0 para si proprio
 

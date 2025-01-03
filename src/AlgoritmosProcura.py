@@ -250,9 +250,7 @@ def procura_AEstrela(mapa, start, end, carga):
         for (m, weight, acessibilidade, ativo) in mapa.m_graph[n]:
             if ativo:  # Verifica se a aresta está ativa
                 temp_custo, _ = menor_custo(mapa, n, m, carga)
-                print(f"{temp_custo}")
-                print(f" heuristica {mapa.getH(n)}")
-                print(f"{g[n]}")
+
                 if m not in open_list and m not in closed_list:
                     open_list.add(m)
                     parents[m] = n
