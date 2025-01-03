@@ -156,6 +156,7 @@ def procuraBFS (mapa: Mapa, nodo_inicial, nodo_final, carga) :
 
         else:
             for (adjacente, _, _, ativo) in mapa.m_graph[nodo_atual] : # Procura adjacentes
+                print(f"Verificando nodo {adjacente} com ativo = {ativo}")
                 if adjacente not in visited and ativo == True : # Apenas nao visitados e !ativos!
 
                     fila.put (adjacente) # Mete para procurar

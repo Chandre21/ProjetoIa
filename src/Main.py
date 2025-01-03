@@ -67,6 +67,8 @@ def main () :
 
     mapa.popularMapa()
 
+    mapa.activateAll()      #para se fecharmos o programa mete tudo direito outra vez
+
     running = True
 
     # GUIzinha marota
@@ -111,7 +113,34 @@ def main () :
 
         elif choice == 3 :
             clearScreen ()
-            pass
+            
+            print ("Escolha uma simulação:")
+            print ("1 - Desativar pontes")
+            print ("2 - Restringir espaço aéreo")
+            print ("9 - Voltar atras")
+
+            choice = int(input(": "))
+
+            match choice:
+                case 1:
+                    mapa.bridgesBeGone()
+                    print("Conexão: Cherry Tree Hills <-> Festival Square [Encerrada]")
+                    print("Conexão: Auburn <-> Fort Meadows [Encerrada]")
+                    print("Conexão: Crescent Park <-> Bluebell National Park [Encerrada]")
+                case 2:
+                    mapa.restrictedAirspace()
+                    print("Conexão: Cherry Tree Hills <-> Albatross Island [Encerrada]")
+                    print("Conexão: Cherry Tree Hills <-> Downtown [Encerrada]")
+                    print("Conexão: Paradise Sands <-> Kings Court [Encerrada]")
+                    print("Conexão: Paradise Sands <-> Bright Lights Plaza [Encerrada]")
+                case 9:
+                    continue
+        
+        elif choice == 4 :
+            clearScreen ()
+
+            mapa.activateAll()
+            print("Todas as conexões foram restabelecidas")
 
         elif choice == 9 :
             clearScreen ()

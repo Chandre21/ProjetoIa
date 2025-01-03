@@ -123,23 +123,23 @@ class Mapa:
 
     def ativarCon(self, nodo1, nodo2):
 
-        for (nodo, _, _, ativo) in self.m_graph [nodo1]:        #1 --ativo-> 2
+        for i, (nodo, custo, acessibilidade, _) in enumerate(self.m_graph[nodo1]):      #1 --ativo-> 2
             if nodo == nodo2:
-                ativo == True
+                self.m_graph[nodo1][i] = (nodo, custo, acessibilidade, True)
 
-        for (nodo, _, _, ativo) in self.m_graph [nodo2]:        #2 --ativo-> 1
+        for i, (nodo, custo, acessibilidade, _) in enumerate(self.m_graph[nodo2]):      #2 --ativo-> 1
             if nodo == nodo1:
-                ativo == True
+                self.m_graph[nodo2][i] = (nodo, custo, acessibilidade, True)
     
     def desativarCon(self, nodo1, nodo2):
 
-        for (nodo, _, _, ativo) in self.m_graph [nodo1]:        #1 --desativo-> 2
+        for i, (nodo, custo, acessibilidade, _) in enumerate(self.m_graph[nodo1]):      #1 --desativo-> 2
             if nodo == nodo2:
-                ativo == False
+                self.m_graph[nodo1][i] = (nodo, custo, acessibilidade, False)
 
-        for (nodo, _, _, ativo) in self.m_graph [nodo2]:        #2 --desativo-> 1
+        for i, (nodo, custo, acessibilidade, _) in enumerate(self.m_graph[nodo2]):      #2 --desativo-> 1
             if nodo == nodo1:
-                ativo == False
+                self.m_graph[nodo2][i] = (nodo, custo, acessibilidade, False)
 
     def bridgesBeGone(self):        #desativa todas as conexões de pontes (exceto aquela de comboio)
 
@@ -153,6 +153,12 @@ class Mapa:
         self.desativarCon(self.get_node_by_name("Cherry Tree Hills"), self.get_node_by_name("Downtown"))
         self.desativarCon(self.get_node_by_name("Paradise Sands"), self.get_node_by_name("Kings Court"))
         self.desativarCon(self.get_node_by_name("Paradise Sands"), self.get_node_by_name("Bright Lights Plaza"))
+
+    def activateAll(self):
+
+        for nodo1 in self.m_graph.keys():
+                for (nodo2, _, _, _) in self.m_graph[nodo1]:
+                    self.ativarCon(nodo1,nodo2)             #forma redondante de o fazer mas olha, é simples
 
     ####################
     #  Popular o mapa  #
@@ -187,7 +193,7 @@ class Mapa:
         self.add_edge ("Bluebell National Park", "Fort Meadows", 10, ["camiao", "heli", "comboio"]) # 11 ->self
 
         #self.set_necessidade_cidade ("Cherry Tree Hills", 200)
-        #self.set_necessidade_cidade ("Albatross Island", 500)
+        self.set_necessidade_cidade ("Albatross Island", 500)
         # mapa.set_necessidade_cidade ("Downtown", valor)
         # mapa.set_necessidade_cidade ("Bright Lights Plaza", valor)
         # mapa.set_necessidade_cidade ("Paradise Sands", valor)
