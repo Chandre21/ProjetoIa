@@ -58,7 +58,7 @@ def runCenario (mapa:Mapa, carga) :
         for (nodoa, nodob, veiculo) in caminho_veiculos :
             print (f"{nodoa.cidade} -----> {nodob.cidade} = Veiculo escolhido: {veiculo.tipo}")
 
-        input ()
+        input("\nEnter para avancar...")
 
 
 def main () :
@@ -95,21 +95,35 @@ def main () :
         elif choice == 2 :
             clearScreen ()
 
+            # print de atuais valores de necessidade
+            print ("Valores atuais:")
+
+            for cidade in mapa.m_cidades:
+                print (f"{cidade.cidade} -> {cidade.necessidade}")
+            print ("")
+
             cidade = str(input("Indique o nome da cidade: "))
-            nec = int(input("Indique a necessidade da cidade: "))
 
             nodo = mapa.get_node_by_name(cidade)
-
             if nodo is None:                    # verifica se o nodo existe no sistema
                 print("A cidade não existe. :o")
+                input("\nEnter para avancar...")
                 continue
+
+            nec = int(input("Indique a necessidade da cidade: "))
+
+            if nec < 0 :
+                print ("Valor necessidade invalido")
+                input("\nEnter para avancar...")
+                continue
+
             else:
                 print("A necessidade da cidade " + cidade + f" foi corretamente atualizada para {nec}.")
 
-            nodo.setNecessidade(nec)
-            
-            mapa.lista_preferencias.append(nodo)
-            mapa.lista_preferencias.sort(key=lambda nodo: nodo.necessidade, reverse = True)        #ordenar a lista por ordem decrescente
+                nodo.setNecessidade(nec)
+                mapa.lista_preferencias.append(nodo)
+                mapa.lista_preferencias.sort(key=lambda nodo: nodo.necessidade, reverse = True)        #ordenar a lista por ordem decrescente
+
 
         elif choice == 3 :
             clearScreen ()
