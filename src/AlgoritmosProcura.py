@@ -182,3 +182,58 @@ def procura_DFS(mapa, nodo_inicial, nodo_final, carga, caminho=[], visited=set()
     #     nodo_atual.mantimentos_atuais = nodo_atual.necessidade
     #     mapa.lista_preferencias.remove (nodo_atual)
 
+def procura_AEstrela(mapa, start, end, carga):
+
+    open_list = {start}
+    closed_list = set()
+
+    g = {}
+    g[start] = 0
+
+    parents = {}
+    parents[start] = start
+
+    while len(open_list) > 0:
+
+        n = None
+
+        for v in open_list:
+            if n is None or g[v] + mapa.getH(v) < g[n] + mapa.getH(n):
+                n = v
+
+        if n is None:
+            print('Path does not exist!')
+            return None
+
+        if n == end:
+            reconst_path = []
+
+            while parents[n] != n:
+                reconst_path.append(n)
+                n = parents[n]
+
+            reconst_path.append(start)
+            reconst_path.reverse()
+
+            caminho_veiculos, custo = calcula_custo(mapa, reconst_path, carga)
+            return (caminho_veiculos, custo)
+
+        for (m, weight, acessibilidade) in mapa.m_graph[n]:
+            if m not in open_list and m not in closed_list:
+                open_list.add(m)
+                parents[m] = n
+                g[m] = g[n] + weight
+            else:
+                if g[m] > g[n] + weight:
+                    g[m] = g[n] + weight
+                    parents[m] = n
+
+                    if m in closed_list:
+                        closed_list.remove(m)
+                        open_list.add(m)
+
+        open_list.remove(n)
+        closed_list.add(n)
+
+    print('Path does not exist!')
+    return None
