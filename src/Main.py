@@ -29,10 +29,19 @@ def runCenario (mapa:Mapa, carga) :
         nodo_inicial = mapa.get_node_by_name (nodo_inicial_str)
         nodo_final = mapa.get_node_by_name (nodo_final_str)
 
+        if nodo_inicial is None or nodo_final is None: 
+            print(f"Erro: Os nodos '{nodo_inicial_str}' ou '{nodo_final_str}' não foram encontrados no mapa.") 
+            return
+
         if choice == 1 :
             clearScreen ()
-            # run A*
-            pass
+            #A*
+            (caminho_veiculos, custo) = procura_AEstrela(mapa, nodo_inicial, nodo_final, carga)
+
+            print (f"custo: {custo}")
+            print ("caminho percorrido:")
+            for (nodoa, nodob, veiculo) in caminho_veiculos :
+                print (f"{nodoa.cidade} -----> {nodob.cidade} = Veiculo escolhido: {veiculo.tipo}")
 
         elif choice == 2 :
             clearScreen ()

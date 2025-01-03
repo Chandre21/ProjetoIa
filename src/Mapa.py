@@ -36,7 +36,7 @@ class Mapa:
                 return node
 
         return None
-
+   
     ########################
     #   imprimir arestas   #
     ########################
@@ -91,6 +91,18 @@ class Mapa:
         nodo = self.get_node_by_name (nome_cidade)
         nodo.setNecessidade (necessidade)
 
+    ############################
+    #   devolver heuristicas   #
+    ############################
+
+    def getH(self,nodo):
+        return self.heuristicas.get(nodo, float('inf'))
+    
+    def setH(self,nome_nodo,heuristica):
+        nodo = self.get_node_by_name(nome_nodo)
+        if nodo:
+            self.heuristicas[nodo] = heuristica
+
 
 
 ####################
@@ -98,33 +110,33 @@ class Mapa:
 ####################
 
 def popularMapa (mapa : Mapa) :
-    mapa.add_edge ("Cherry Tree Hills", "Auburn", 15, ["camiao", "heli"]) # 1 -> 2
+    mapa.add_edge ("Cherry Tree Hills", "Auburn", 10, ["camiao", "heli"]) # 1 -> 2
     mapa.add_edge ("Cherry Tree Hills", "Albatross Island", 25, ["heli"]) # 1 -> 13
     mapa.add_edge ("Cherry Tree Hills", "Fort Meadows", 15, ["comboio"]) # 1 -> 10
-    mapa.add_edge ("Cherry Tree Hills", "Festival Square", 15, ["camiao"]) # 1 -> 3
+    mapa.add_edge ("Cherry Tree Hills", "Festival Square", 10, ["camiao"]) # 1 -> 3
     mapa.add_edge ("Cherry Tree Hills", "Downtown", 15, ["heli"]) # 1 -> 5
 
     mapa.add_edge ("Albatross Island", "Downtown", 15, ["barco", "heli"]) # 13 -> 5
 
-    mapa.add_edge ("Downtown", "Kings Court", 15, ["camiao", "heli"]) # 5 -> 4
-    mapa.add_edge ("Downtown", "Festival Square", 15, ["camiao"]) # 5 -> 3
+    mapa.add_edge ("Downtown", "Kings Court", 8, ["camiao", "heli"]) # 5 -> 4
+    mapa.add_edge ("Downtown", "Festival Square", 8, ["camiao"]) # 5 -> 3
 
     mapa.add_edge ("Auburn", "Fort Meadows", 15, ["camiao", "heli"]) # 2 -> 10
     mapa.add_edge ("Auburn", "Lady Liberty Island", 15, ["barco"]) # 2 -> 12
 
-    mapa.add_edge ("Bright Lights Plaza", "Lady Liberty Island", 15, ["barco"]) # 6 -> 12
-    mapa.add_edge ("Bright Lights Plaza", "Crescent Park", 15, ["camiao", "heli"]) # 6 -> 7
-    mapa.add_edge ("Bright Lights Plaza", "Paradise Sands", 15, ["camiao", "heli"]) # 6 -> 8
-    mapa.add_edge ("Bright Lights Plaza", "Festival Square", 15, ["camiao"]) # 6 -> 3
+    mapa.add_edge ("Bright Lights Plaza", "Lady Liberty Island", 12, ["barco"]) # 6 -> 12
+    mapa.add_edge ("Bright Lights Plaza", "Crescent Park", 8, ["camiao", "heli"]) # 6 -> 7
+    mapa.add_edge ("Bright Lights Plaza", "Paradise Sands", 12, ["camiao", "heli"]) # 6 -> 8
+    mapa.add_edge ("Bright Lights Plaza", "Festival Square", 10, ["camiao"]) # 6 -> 3
 
 
-    mapa.add_edge ("Paradise Sands", "Lego City Airport", 15, ["camiao"]) # 8 -> 9
-    mapa.add_edge ("Paradise Sands", "Kings Court", 15, ["heli"]) # 8 -> 4
+    mapa.add_edge ("Paradise Sands", "Lego City Airport", 8, ["camiao"]) # 8 -> 9
+    mapa.add_edge ("Paradise Sands", "Kings Court", 20, ["heli"]) # 8 -> 4
 
-    mapa.add_edge ("Crescent Park", "Lego City Airport", 15, ["camiao"]) # 7 -> 9
-    mapa.add_edge ("Crescent Park", "Bluebell National Park", 15, ["camiao", "heli", "comboio"]) # 7 -> 11
+    mapa.add_edge ("Crescent Park", "Lego City Airport", 8, ["camiao"]) # 7 -> 9
+    mapa.add_edge ("Crescent Park", "Bluebell National Park", 17, ["camiao", "heli", "comboio"]) # 7 -> 11
 
-    mapa.add_edge ("Bluebell National Park", "Fort Meadows", 15, ["camiao", "heli", "comboio"]) # 11 -> 10
+    mapa.add_edge ("Bluebell National Park", "Fort Meadows", 10, ["camiao", "heli", "comboio"]) # 11 -> 10
 
     # mapa.set_necessidade_cidade ("Cherry Tree Hills", 100)
     # mapa.set_necessidade_cidade ("Albatross Island", 100)
@@ -139,3 +151,17 @@ def popularMapa (mapa : Mapa) :
     # mapa.set_necessidade_cidade ("Fort Meadows", valor)
     # mapa.set_necessidade_cidade ("Kings Court", valor)
     # mapa.set_necessidade_cidade ("Auburn", valor)
+
+    mapa.setH("Cherry Tree Hills",3)
+    mapa.setH("Auburn",3)
+    mapa.setH("Festival Square",1000)
+    mapa.setH("Kings Court",3)
+    mapa.setH("Downtown",1000)
+    mapa.setH("Bright Lights Plaza",10)
+    mapa.setH("Crescent Park",3)
+    mapa.setH("Paradise Sands",10)
+    mapa.setH("Lego City Airport",3)
+    mapa.setH("Fort Meadows",3)
+    mapa.setH("Bluebell National Park",3)
+    mapa.setH("Lady Liberty Island",1000)
+    mapa.setH("Albatross Island",3)
