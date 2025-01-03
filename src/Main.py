@@ -93,6 +93,13 @@ def main () :
         elif choice == 2 :
             clearScreen ()
 
+            # print de atuais valores de necessidade
+            print ("Valores atuais:")
+
+            for cidade in mapa.m_cidades:
+                print (f"{cidade.cidade} -> {cidade.necessidade}")
+            print ("")
+
             cidade = str(input("Indique o nome da cidade: "))
             nec = int(input("Indique a necessidade da cidade: "))
 
@@ -105,7 +112,7 @@ def main () :
                 print("A necessidade da cidade " + cidade + f" foi corretamente atualizada para {nec}.")
 
             nodo.setNecessidade(nec)
-            
+
             mapa.lista_preferencias.append(nodo)
             mapa.lista_preferencias.sort(key=lambda nodo: nodo.necessidade, reverse = True)        #ordenar a lista por ordem decrescente
 
