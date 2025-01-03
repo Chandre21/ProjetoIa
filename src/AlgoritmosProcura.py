@@ -24,7 +24,7 @@ def menor_custo (mapa : Mapa, nodo1, nodo2, carga_atual) :
         if nodo == nodo2:
 
             if nodo2 in mapa.lista_preferencias :
-                custo_base = - ((mapa.lista_preferencias.__len__ - mapa.lista_preferencias.index (nodo2)) * 10)
+                custo_base = - ((len (mapa.lista_preferencias) - mapa.lista_preferencias.index (nodo2)) * 10)
             else :
                 custo_base = 0
 
@@ -56,7 +56,6 @@ def menor_custo (mapa : Mapa, nodo1, nodo2, carga_atual) :
 def calcula_custo(mapa, caminho, carga):
 
         caminho_veiculos = []
-        caminho
         custo = 0
         i = 0
 
@@ -79,7 +78,34 @@ def calcula_custo(mapa, caminho, carga):
 #      Algoritmos      #
 ########################
 
-def procuraBFS (mapa: Mapa, nodo_inicial, nodo_final, carga) :
+def procuraBFS (mapa: Mapa, nodo_inicial_input, carga) :
+
+    caminho_veiculos_total = []
+    custo_total = 0
+
+    nodo_inicial = nodo_inicial_input
+
+    while mapa.lista_preferencias != [] :
+        (caminho_veiculos, custo) = procuraBFS_iter (mapa, nodo_inicial, mapa.lista_preferencias [0], carga)
+        caminho_veiculos_total = caminho_veiculos_total + caminho_veiculos
+        custo_total += custo
+
+        for (nodoa, nodob, veiculo) in caminho_veiculos :
+            if nodob in mapa.lista_preferencias :
+                carga -= nodob.necessidade
+                nodob.mantimentos_atuais = nodob.necessidade
+                mapa.lista_preferencias.remove (nodob)
+                print ("")
+                print (f"descarregou no nodo {nodob.cidade}")
+                print ("")
+
+        (_, nodo_inicial, _) = caminho_veiculos [-1]
+
+    return (caminho_veiculos_total, custo_total)
+
+
+
+def procuraBFS_iter (mapa: Mapa, nodo_inicial, nodo_final, carga) :
 
     # definir nodos visitados para evitar ciclos
     visited = set ()

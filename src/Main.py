@@ -23,7 +23,7 @@ def runCenario (mapa:Mapa, carga) :
         # Ler numero obtido
         choice = int(input(": "))
 
-        nodo_inicial_str = "Cherry Tree Hills"
+        nodo_inicial_str = "Bright Lights Plaza"
         nodo_final_str = "Lego City Airport"
 
         nodo_inicial = mapa.get_node_by_name (nodo_inicial_str)
@@ -37,7 +37,7 @@ def runCenario (mapa:Mapa, carga) :
         elif choice == 2 :
             clearScreen ()
             # BFS
-            (caminho_veiculos, custo) = procuraBFS (mapa, nodo_inicial, nodo_final, carga)
+            (caminho_veiculos, custo) = procuraBFS (mapa, nodo_inicial, carga)
 
             print (f"custo: {custo}")
             print ("caminho percorrido:")
@@ -64,6 +64,8 @@ def main () :
     mapa = Mapa ()
 
     popularMapa (mapa)
+
+    popular_lista_preferencias (mapa)
 
     running = True
 

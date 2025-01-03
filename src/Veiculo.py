@@ -11,7 +11,7 @@ class Veiculo :
         match tipo:
             case "camiao": # valores rudimentares, depois muda-se, e no final, calcular tempo como inverso da vel
                 self.capacidade_carga = 500
-                self.velocidade = 60
+                self.velocidade = 50
                 self.consumo = 1
 
             case "heli":
@@ -21,12 +21,12 @@ class Veiculo :
 
             case "barco":
                 self.capacidade_carga = 3000
-                self.velocidade = 40
+                self.velocidade = 30
                 self.consumo = 3
 
             case "comboio":
                 self.capacidade_carga = 1500
-                self.velocidade = 140
+                self.velocidade = 100
                 self.consumo = 2
 
     def calcula_combustivel_consumido (self, distancia) :

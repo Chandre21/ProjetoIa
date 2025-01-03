@@ -126,8 +126,8 @@ def popularMapa (mapa : Mapa) :
 
     mapa.add_edge ("Bluebell National Park", "Fort Meadows", 15, ["camiao", "heli", "comboio"]) # 11 -> 10
 
-    # mapa.set_necessidade_cidade ("Cherry Tree Hills", 100)
-    # mapa.set_necessidade_cidade ("Albatross Island", 100)
+    mapa.set_necessidade_cidade ("Cherry Tree Hills", 200)
+    mapa.set_necessidade_cidade ("Albatross Island", 500)
     # mapa.set_necessidade_cidade ("Downtown", valor)
     # mapa.set_necessidade_cidade ("Bright Lights Plaza", valor)
     # mapa.set_necessidade_cidade ("Paradise Sands", valor)
@@ -139,3 +139,28 @@ def popularMapa (mapa : Mapa) :
     # mapa.set_necessidade_cidade ("Fort Meadows", valor)
     # mapa.set_necessidade_cidade ("Kings Court", valor)
     # mapa.set_necessidade_cidade ("Auburn", valor)
+
+
+def popular_lista_preferencias (mapa : Mapa) :
+
+    mapa.lista_preferencias = []
+    for node in mapa.m_cidades :
+
+        # set heuristica
+
+        if node.necessidade == 0 :
+            continue
+
+        i = 0
+        while i < len (mapa.lista_preferencias) and node.necessidade < mapa.lista_preferencias [i].necessidade :
+            i = i + 1
+        mapa.lista_preferencias.insert(i, node)
+
+    # print ("[")
+    # for node in mapa.lista_preferencias :
+    #     print(f"{node.necessidade},")
+    # print ("]")
+
+
+
+
