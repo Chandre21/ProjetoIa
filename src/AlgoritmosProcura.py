@@ -14,6 +14,17 @@ from Nodo import *
 #     Obter custo de caminho     #
 ##################################
 
+def custo_discount (posicao):
+    match posicao:
+        case 0:
+            return 0.7
+        case 1:
+            return 0.8
+        case 2:
+            return 0.85
+        case _:
+            return 0.9
+
 def menor_custo (mapa : Mapa, nodo1, nodo2, carga_atual) :
 
     menorcusto = float ('inf') # Numero maior que todos os outros
@@ -22,14 +33,7 @@ def menor_custo (mapa : Mapa, nodo1, nodo2, carga_atual) :
     for (nodo,distancia,acessibilidade) in mapa.m_graph [nodo1]: # Verificar se o destino está conectado à cidade atual
         if nodo == nodo2:
 
-            if nodo2 in mapa.lista_preferencias :
-                custo_base = - ((len (mapa.lista_preferencias) - mapa.lista_preferencias.index (nodo2)) * 10)
-            else :
-                custo_base = 0
-
             for tipo in acessibilidade: # Itera sobre todos os veiculos naquela conexão
-
-                custo = custo_base
 
                 veiculo = Veiculo (tipo)
                 cargaCopy = carga_atual
@@ -37,9 +41,8 @@ def menor_custo (mapa : Mapa, nodo1, nodo2, carga_atual) :
                 veiculos_necessarios = math.ceil (cargaCopy / veiculo.getCapacidade())
                 combustivel_gasto = veiculo.calcula_combustivel_consumido (distancia) * veiculos_necessarios
 
-                custo += 0.5 * combustivel_gasto - 0.1 * veiculo.getVelocidade ()
-                # 50% combustivel
-                # 50% velocidade
+                custo = 0.5 * combustivel_gasto + ( 500 / (veiculo.getVelocidade ()))      
+                
                 print (f"tipo_veiculo: {tipo}   combustive gasto: {combustivel_gasto}   veiculos necessarios: {veiculos_necessarios}   velocidade: {veiculo.getVelocidade ()}")
                 print (f"custo resultado deste tipo: {custo}")
                 print ("")
@@ -47,6 +50,9 @@ def menor_custo (mapa : Mapa, nodo1, nodo2, carga_atual) :
                 if custo < menorcusto: # Agora verifica se muda ou não o método de transporte
                     menorcusto = custo
                     melhorveiculo = veiculo
+
+            if nodo2 in mapa.lista_preferencias :
+                custo = custo * custo_discount(mapa.lista_preferencias.index (nodo2))
 
     print (f"escolhi o {melhorveiculo.tipo}")
     print ("")
