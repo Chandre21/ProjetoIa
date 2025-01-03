@@ -1,4 +1,4 @@
-class Nodo:         #cidades bro
+class Nodo:         #cidades
     def __init__(self, cidade):
         self.id = 0
         self.cidade = cidade

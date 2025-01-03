@@ -3,7 +3,7 @@
 # A*
 
 from queue import Queue
-
+import math
 from Mapa import *
 from Veiculo import *
 from Nodo import *
@@ -43,9 +43,9 @@ def menor_custo (mapa : Mapa, nodo1, nodo2, carga_atual) :
 
                 custo = 0.5 * combustivel_gasto + ( 500 / (veiculo.getVelocidade ()))      
                 
-                print (f"tipo_veiculo: {tipo}   combustive gasto: {combustivel_gasto}   veiculos necessarios: {veiculos_necessarios}   velocidade: {veiculo.getVelocidade ()}")
-                print (f"custo resultado deste tipo: {custo}")
-                print ("")
+                #print (f"tipo_veiculo: {tipo}   combustive gasto: {combustivel_gasto}   veiculos necessarios: {veiculos_necessarios}   velocidade: {veiculo.getVelocidade ()}")
+                #print (f"custo resultado deste tipo: {custo}")
+                #print ("")
 
                 if custo < menorcusto: # Agora verifica se muda ou não o método de transporte
                     menorcusto = custo
@@ -53,9 +53,6 @@ def menor_custo (mapa : Mapa, nodo1, nodo2, carga_atual) :
 
             if nodo2 in mapa.lista_preferencias :
                 custo = custo * custo_discount(mapa.lista_preferencias.index (nodo2))
-
-    print (f"escolhi o {melhorveiculo.tipo}")
-    print ("")
 
     return (menorcusto, melhorveiculo)
 
@@ -92,7 +89,7 @@ def iterator (mapa: Mapa, nodo_inicial_input, carga, algoritmo) :
     nodo_inicial = nodo_inicial_input
 
     while mapa.lista_preferencias != [] :
-        print (f"{nodo_inicial.cidade} -> {mapa.lista_preferencias [0].cidade}")
+        #print (f"{nodo_inicial.cidade} -> {mapa.lista_preferencias [0].cidade}")
         match algoritmo:
 
 
@@ -122,9 +119,9 @@ def iterator (mapa: Mapa, nodo_inicial_input, carga, algoritmo) :
                 mapa.set_necessidade_cidade(nodob.cidade, 0)        #reset à necessidade para 0
                 mapa.lista_preferencias.remove (nodob)
 
-                print ("")
-                print (f"descarregou no nodo {nodob.cidade}")
-                print ("")
+                #print ("")
+                #print (f"descarregou no nodo {nodob.cidade}")
+                #print ("")
 
         (_, nodo_inicial, _) = caminho_veiculos [-1]
 
@@ -156,7 +153,7 @@ def procuraBFS (mapa: Mapa, nodo_inicial, nodo_final, carga) :
 
         else:
             for (adjacente, _, _, ativo) in mapa.m_graph[nodo_atual] : # Procura adjacentes
-                print(f"Verificando nodo {adjacente} com ativo = {ativo}")
+                
                 if adjacente not in visited and ativo == True : # Apenas nao visitados e !ativos!
 
                     fila.put (adjacente) # Mete para procurar
@@ -203,13 +200,6 @@ def procura_DFS(mapa, nodo_inicial, nodo_final, carga, caminho=[], visited=set()
     return None
 
 
-    # Se tiver na lista de prioridade das cidades
-
-    # if nodo_atual in mapa.lista_preferencias :
-    #     carga -= nodo_atual.necessidade
-    #     nodo_atual.mantimentos_atuais = nodo_atual.necessidade
-    #     mapa.lista_preferencias.remove (nodo_atual)
-
 def procura_AEstrela(mapa, start, end, carga):
 
     open_list = {start}
@@ -232,7 +222,7 @@ def procura_AEstrela(mapa, start, end, carga):
         mapa.setAllH(n)  # Atualiza as heurísticas
 
         if n is None:
-            print('Path does not exist!')
+            print('Caminho não encontrado!')
             return None
 
         if n == end:
@@ -244,11 +234,11 @@ def procura_AEstrela(mapa, start, end, carga):
 
             reconst_path.append(start)
             reconst_path.reverse()
-            print(reconst_path)
+            
             caminho_veiculos, custo = calcula_custo(mapa, reconst_path, carga)
             return (caminho_veiculos, custo)
 
-        for (m, weight, acessibilidade, ativo) in mapa.m_graph[n]:
+        for (m, _, _, ativo) in mapa.m_graph[n]:
             if ativo:  # Verifica se a aresta está ativa
                 temp_custo, _ = menor_custo(mapa, n, m, carga)
 
@@ -268,5 +258,5 @@ def procura_AEstrela(mapa, start, end, carga):
         open_list.remove(n)
         closed_list.add(n)
 
-    print('Path does not exist!')
+    print('Caminho não encontrado!')
     return None

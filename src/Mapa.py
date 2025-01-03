@@ -1,6 +1,4 @@
 # Classe grafo para representaçao de grafos,
-import math
-import random
 from queue import Queue
 
 from Nodo import Nodo
@@ -194,25 +192,23 @@ class Mapa:
 
         #self.set_necessidade_cidade ("Cherry Tree Hills", 200)
         self.set_necessidade_cidade ("Albatross Island", 500)
-        # mapa.set_necessidade_cidade ("Downtown", valor)
-        # mapa.set_necessidade_cidade ("Bright Lights Plaza", valor)
-        # mapa.set_necessidade_cidade ("Paradise Sands", valor)
-        # mapa.set_necessidade_cidade ("Crescent Park", valor)
-        # mapa.set_necessidade_cidade ("Bluebell National Park", valor)
-        # mapa.set_necessidade_cidade ("Lady Liberty Island", valor)
+        # self.set_necessidade_cidade ("Downtown", valor)
+        # self.set_necessidade_cidade ("Bright Lights Plaza", valor)
+        # self.set_necessidade_cidade ("Paradise Sands", valor)
+        # self.set_necessidade_cidade ("Crescent Park", valor)
+        # self.set_necessidade_cidade ("Bluebell National Park", valor)
+        # self.set_necessidade_cidade ("Lady Liberty Island", valor)
         self.set_necessidade_cidade ("Lego City Airport", 100)
-        # mapa.set_necessidade_cidade ("Festival Square", valor)
-        # mapa.set_necessidade_cidade ("Fort Meadows", valor)
-        # mapa.set_necessidade_cidade ("Kings Court", valor)
-        # mapa.set_necessidade_cidade ("Auburn", valor)
+        # self.set_necessidade_cidade ("Festival Square", valor)
+        # self.set_necessidade_cidade ("Fort Meadows", valor)
+        # self.set_necessidade_cidade ("Kings Court", valor)
+        # self.set_necessidade_cidade ("Auburn", valor)
 
 
     def popular_lista_preferencias (self) :
 
         self.lista_preferencias = []
         for node in self.m_cidades :
-
-            # heuristica make pls
 
             if node.necessidade == 0 :
                 continue
@@ -222,9 +218,3 @@ class Mapa:
                 i = i + 1
 
             self.lista_preferencias.insert(i, node)
-
-        # print ("[")
-        # for node in mapa.lista_preferencias :
-        #     print(f"{node.necessidade},")
-        # print ("]")
-
